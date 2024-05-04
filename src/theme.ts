@@ -54,24 +54,78 @@ export const theme = responsiveFontSizes(
         color: "#212121",
       },
 
-      h1: { fontSize: 40, fontWeight: 500 },
-      h2: { fontSize: 32, fontWeight: 400 },
-      h3: { fontSize: 24, fontWeight: 500 },
-      h4: { fontSize: 24, fontWeight: 400 },
-      h5: { fontSize: 20, fontWeight: 500 },
-      h6: { fontSize: 20, fontWeight: 400 },
-      s1: { fontSize: 18, fontWeight: 400 },
-      s2: { fontSize: 16, fontWeight: 800 },
-      s3: { fontSize: 16, fontWeight: 700 },
-      s4: { fontSize: 16, fontWeight: 600 },
-      s5: { fontSize: 16, fontWeight: 500 },
-      s6: { fontSize: 16, fontWeight: 400 },
-      b1: { fontSize: 14, fontWeight: 600 },
-      b2: { fontSize: 14, fontWeight: 500 },
-      b3: { fontSize: 14, fontWeight: 400 },
-      b4: { fontSize: 12, fontWeight: 700 },
-      b5: { fontSize: 12, fontWeight: 500 },
-      b6: { fontSize: 12, fontWeight: 400 },
+      h1: {
+        fontSize: 40,
+        fontWeight: 500,
+      },
+      h2: {
+        fontSize: 32,
+        fontWeight: 400,
+      },
+      h3: {
+        fontSize: 24,
+        fontWeight: 500,
+      },
+      h4: {
+        fontSize: 24,
+        fontWeight: 400,
+      },
+      h5: {
+        fontSize: 20,
+        fontWeight: 500,
+      },
+      h6: {
+        fontSize: 20,
+        fontWeight: 400,
+      },
+      s1: {
+        fontSize: 18,
+        fontWeight: 400,
+      },
+      s2: {
+        fontSize: 16,
+        fontWeight: 800,
+      },
+      s3: {
+        fontSize: 16,
+        fontWeight: 700,
+      },
+      s4: {
+        fontSize: 16,
+        fontWeight: 600,
+      },
+      s5: {
+        fontSize: 16,
+        fontWeight: 500,
+      },
+      s6: {
+        fontSize: 16,
+        fontWeight: 400,
+      },
+      b1: {
+        fontSize: 14,
+        fontWeight: 600,
+      },
+      b2: {
+        fontSize: 14,
+        fontWeight: 500,
+      },
+      b3: {
+        fontSize: 14,
+        fontWeight: 400,
+      },
+      b4: {
+        fontSize: 12,
+        fontWeight: 700,
+      },
+      b5: {
+        fontSize: 12,
+        fontWeight: 500,
+      },
+      b6: {
+        fontSize: 12,
+        fontWeight: 400,
+      },
     },
     components: {
       MuiButton: {
