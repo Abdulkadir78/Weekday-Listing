@@ -23,6 +23,8 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
         sx={{
           borderRadius: "12px",
           boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.08)",
+          ":hover": { transform: "scale(1.01)" },
+          transition: "transform .3s ease",
         }}
       >
         <CardContent
