@@ -9,9 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 
-const hasExtraCharacters = true;
+import { Job } from "../types";
 
-export const JobCard = () => {
+const MAX_CHARS = 440;
+
+export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
+  // to show the blur effect if the description is more than MAX_CHARS characters
+  const hasExtraCharacters = job.company?.description.length > MAX_CHARS;
+
   return (
     <>
       <Card
@@ -20,9 +25,16 @@ export const JobCard = () => {
           boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.08)",
         }}
       >
-        <CardContent>
+        <CardContent
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+          }}
+        >
           <Chip
-            label="⏳ Posted 4 days ago"
+            label={"⏳ " + job.datePosted}
             variant="outlined"
             sx={{
               height: 20,
@@ -38,26 +50,35 @@ export const JobCard = () => {
           <Box sx={{ mt: "16px", display: "flex", gap: "10px" }}>
             <Box sx={{ width: 32, height: 32 }}>
               <img
-                src="/vite.svg"
+                src={job.company?.logo}
                 alt="company logo"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </Box>
 
             <Box>
-              <Typography variant="b2" sx={{ color: "text.disabled" }}>
-                Fampay
-              </Typography>
+              <Link href={job.viewLink} underline="hover">
+                <Typography variant="b2" sx={{ color: "text.disabled" }}>
+                  {job.company?.name}
+                </Typography>
+              </Link>
 
               <Typography variant="s6">Backend Engineer</Typography>
               <Typography variant="b5" mt="4px">
-                Bangalore | Exp: 5-5 years
+                {job.location}
+
+                {job.experience &&
+                  "| Exp: " +
+                    job.experience.min +
+                    (job.experience?.max && "-" + job.experience?.max) +
+                    " years"}
               </Typography>
             </Box>
           </Box>
 
           <Typography variant="b2" sx={{ mt: "8px", color: "text.secondary" }}>
-            Estimated Salary: ₹30 - 60 LPA ✅
+            Estimated Salary: ₹{job.estimatedSalary?.min} -{" "}
+            {job.estimatedSalary?.max} LPA ✅
           </Typography>
 
           <>
@@ -68,17 +89,9 @@ export const JobCard = () => {
             <Typography variant="b1">About us</Typography>
 
             <Box sx={{ position: "relative" }}>
+              {/* <Box sx={{ maxHeight: 250, overflow: "hidden" }}> */}
               <Box sx={{ maxHeight: 250, overflow: "hidden" }}>
-                <Typography variant="b3">
-                  FamPay is building India&apos;s first neo-bank exclusively
-                  teens. FamPay helps teens make their own online and offline
-                  payments through UPI, FamPay App and FamCard. Our aim is to
-                  make banking cool for teens and to help them learn the value
-                  of money, savings and spending wisely. We are on a mission to
-                  raise a new, financially aware generation, and drive 250
-                  Million+ Indian teenagers to kickstart their financial journey
-                  super early in their life.
-                </Typography>
+                <Typography variant="b3">{job.company?.description}</Typography>
               </Box>
 
               {hasExtraCharacters && (
@@ -99,7 +112,7 @@ export const JobCard = () => {
                   />
 
                   <Link
-                    href="#"
+                    href={job.viewLink}
                     color="primary"
                     variant="b3"
                     underline="none"
@@ -118,60 +131,56 @@ export const JobCard = () => {
             </Box>
           </>
 
-          <Box mt="24px">
-            <Typography variant="b2" sx={{ color: "text.disabled" }}>
-              Skills
-            </Typography>
+          {!!job.skills?.length && (
+            <Box mt="24px">
+              <Typography variant="b2" sx={{ color: "text.disabled" }}>
+                Skills
+              </Typography>
 
-            <Box
-              sx={{ mt: "4px", display: "flex", gap: "4px", flexWrap: "wrap" }}
-            >
-              <Chip
-                label="Senior Engineer"
+              <Box
                 sx={{
-                  fontSize: 10,
-                  height: 16,
-                  color: "primary.main",
-                  backgroundColor: "secondary.light",
+                  mt: "4px",
+                  display: "flex",
+                  gap: "4px",
+                  flexWrap: "wrap",
                 }}
-              />
-              <Chip
-                label="Founding Engineer"
-                sx={{
-                  fontSize: 10,
-                  height: 16,
-                  color: "primary.main",
-                  backgroundColor: "secondary.light",
-                }}
-              />
-              <Chip
-                label="Typescript"
-                sx={{
-                  fontSize: 10,
-                  height: 16,
-                  color: "primary.main",
-                  backgroundColor: "secondary.light",
-                }}
-              />
+              >
+                {job.skills.map((skill) => {
+                  return (
+                    <Chip
+                      key={skill}
+                      label={skill}
+                      sx={{
+                        fontSize: 10,
+                        height: 16,
+                        color: "primary.main",
+                        backgroundColor: "secondary.light",
+                      }}
+                    />
+                  );
+                })}
+              </Box>
             </Box>
-          </Box>
+          )}
 
           <Box mt="12px">
             <Typography variant="b2" sx={{ color: "text.disabled" }}>
               Minimum Experience
             </Typography>
 
-            <Typography variant="b3">5 years</Typography>
+            <Typography variant="b3">{job.experience?.min} years</Typography>
           </Box>
 
-          <Box mt="16px">
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ width: "100%" }}
-            >
-              ⚡ Easy Apply
-            </Button>
+          <Box mt="auto">
+            <a href={job.applyLink}>
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ width: "100%", mt: "16px" }}
+              >
+                ⚡ Easy Apply
+              </Button>
+            </a>
 
             <Button
               variant="contained"

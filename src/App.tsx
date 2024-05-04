@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 
 import { theme } from "./theme";
 import { JobCard } from "./components/JobCard";
+import { jobs } from "./data";
 
 const App = () => {
   return (
@@ -23,10 +24,9 @@ const App = () => {
               gap: "32px",
             }}
           >
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
+            {jobs.map((job) => {
+              return <JobCard key={job.id} job={job} />;
+            })}
           </Box>
         </Container>
       </ThemeProvider>
