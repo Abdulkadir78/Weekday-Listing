@@ -1,24 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Box,
-  ThemeProvider,
-  Container,
-  CssBaseline,
-  Typography,
-} from "@mui/material";
+import { Box, ThemeProvider, Container, CssBaseline } from "@mui/material";
 
 import { theme } from "./theme";
 import { Loading } from "./components/Loading";
-import { JobCard } from "./components/JobCard";
 import { FilterKey, Filters } from "./components/Filters";
 import { useIntersection } from "./hooks/useIntersection";
 import { Job, getJobs } from "./queries";
+import { JobList } from "./components/JobList";
 // import { jobs as jobsData } from "./data";
 
 const PER_PAGE = 12;
 
 const App = () => {
-  // const [jobs, setJobs] = useState<Job[]>(jobsData); // using static data for development
+  /* static data for development */
+  // const [jobs, setJobs] = useState<Job[]>(jobsData);
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [pageNo, setPageNo] = useState(1);
@@ -120,37 +115,25 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <Container maxWidth="xl" sx={{ my: "40px" }}>
+        <Box
+          sx={{
+            p: "10px 40px 5px 40px",
+            position: "sticky",
+            top: 0,
+            backgroundColor: "#FFFFFF",
+            zIndex: 1,
+          }}
+        >
           <Filters
             jobs={jobs}
             selectedFilters={filters}
             updateFilter={updateFilter}
+            isLoading={isLoading}
           />
+        </Box>
 
-          {filteredJobs.length === 0 && !isLoading && (
-            <Typography
-              variant="b3"
-              sx={{ color: "text.secondary", my: "40px" }}
-            >
-              There are no jobs matching the criteria
-            </Typography>
-          )}
-
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                sm: "repeat(2, 1fr)",
-                md: "repeat(3, 1fr)",
-                lg: "repeat(4, 1fr)",
-              },
-              gap: "32px",
-            }}
-          >
-            {filteredJobs.map((job, i) => {
-              return <JobCard key={job.jdUid + i} job={job} />;
-            })}
-          </Box>
+        <Container maxWidth="xl" sx={{ mt: "10px", mb: "40px" }}>
+          <JobList jobs={filteredJobs} isLoading={isLoading} />
 
           <Box ref={listEndRef} />
 

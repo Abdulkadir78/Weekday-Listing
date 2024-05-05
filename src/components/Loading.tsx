@@ -8,7 +8,7 @@ export const Loading: React.FC<{ fullScreen?: boolean }> = ({ fullScreen }) => {
         alignItems: "center",
         justifyContent: "center",
         py: "40px",
-        ...(fullScreen && { height: "100vh" }),
+        ...(fullScreen && { height: "80vh" }),
       }}
     >
       <CircularProgress size={32} />
