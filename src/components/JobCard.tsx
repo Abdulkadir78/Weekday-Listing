@@ -8,19 +8,14 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Job } from "../types";
-
-// to show job posted time in relative format
-dayjs.extend(relativeTime);
+import { Job } from "../queries";
 
 const MAX_CHARS = 440;
 
 export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
   // to show the blur effect if the description is more than MAX_CHARS characters
-  const hasExtraCharacters = job.company?.description.length > MAX_CHARS;
+  const hasExtraCharacters = job.jobDetailsFromCompany?.length > MAX_CHARS;
 
   return (
     <>
@@ -41,7 +36,13 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
           }}
         >
           <Chip
-            label={"⏳ " + dayjs(job.datePosted)?.fromNow()}
+            /*
+              ***** Date of job posting is not provided in the API response,
+              otherwise we could use dayjs (2Kb library) to show the relative time *****
+            */
+
+            label={"⏳ " + "4 days ago"}
+            // label={"⏳ " + dayjs(job.datePosted)?.fromNow()}
             variant="outlined"
             sx={{
               height: 20,
@@ -57,35 +58,39 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
           <Box sx={{ mt: "16px", display: "flex", gap: "10px" }}>
             <Box sx={{ width: 32, height: 32 }}>
               <img
-                src={job.company?.logo}
+                src={job.logoUrl}
                 alt="company logo"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </Box>
 
             <Box>
-              <Link href={job.viewLink} underline="hover">
+              <Link href={job.jdLink} underline="hover">
                 <Typography variant="b2" sx={{ color: "text.disabled" }}>
-                  {job.company?.name}
+                  {job.companyName}
                 </Typography>
               </Link>
 
-              <Typography variant="s6">Backend Engineer</Typography>
-              <Typography variant="b5" mt="4px">
+              <Typography variant="s6" textTransform="capitalize">
+                {job.jobRole}
+              </Typography>
+
+              <Typography variant="b5" mt="4px" textTransform="capitalize">
                 {job.location}
 
-                {job.experience &&
-                  "| Exp: " +
-                    job.experience.min +
-                    (job.experience?.max && "-" + job.experience?.max) +
+                {job.minExp &&
+                  " | Exp: " +
+                    job.minExp +
+                    (job.maxExp && "-" + job.maxExp) +
                     " years"}
               </Typography>
             </Box>
           </Box>
 
+          {/* ***** LPA is used because salaries are provided as 2 digits ***** */}
           <Typography variant="b2" sx={{ mt: "8px", color: "text.secondary" }}>
-            Estimated Salary: ₹{job.estimatedSalary?.min} -{" "}
-            {job.estimatedSalary?.max} LPA ✅
+            Estimated Salary: {job.salaryCurrencyCode} {job.minJdSalary}{" "}
+            {job.maxJdSalary && job.minJdSalary && "-"} {job.maxJdSalary} LPA ✅
           </Typography>
 
           <>
@@ -98,7 +103,9 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
             <Box sx={{ position: "relative" }}>
               {/* <Box sx={{ maxHeight: 250, overflow: "hidden" }}> */}
               <Box sx={{ maxHeight: 250, overflow: "hidden" }}>
-                <Typography variant="b3">{job.company?.description}</Typography>
+                <Typography variant="b3">
+                  {job.jobDetailsFromCompany}
+                </Typography>
               </Box>
 
               {hasExtraCharacters && (
@@ -119,7 +126,7 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
                   />
 
                   <Link
-                    href={job.viewLink}
+                    href={job.jdLink}
                     color="primary"
                     variant="b3"
                     underline="none"
@@ -138,7 +145,9 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
             </Box>
           </>
 
-          {!!job.skills?.length && (
+          {/* ***** Required skills were not provided in the API response, otherwise they would be shown as chips ***** */}
+
+          {/* {!!job.skills?.length && (
             <Box mt="24px">
               <Typography variant="b2" sx={{ color: "text.disabled" }}>
                 Skills
@@ -168,18 +177,22 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
                 })}
               </Box>
             </Box>
+          )} */}
+
+          {job.minExp && (
+            <Box mt="12px">
+              <Typography variant="b2" sx={{ color: "text.disabled" }}>
+                Minimum Experience
+              </Typography>
+
+              <Typography variant="b3">
+                {job.minExp} {job.minExp > 1 ? "years" : "year"}
+              </Typography>
+            </Box>
           )}
 
-          <Box mt="12px">
-            <Typography variant="b2" sx={{ color: "text.disabled" }}>
-              Minimum Experience
-            </Typography>
-
-            <Typography variant="b3">{job.experience?.min} years</Typography>
-          </Box>
-
           <Box mt="auto">
-            <a href={job.applyLink}>
+            <a href={job.jdLink}>
               <Button
                 variant="contained"
                 color="secondary"
