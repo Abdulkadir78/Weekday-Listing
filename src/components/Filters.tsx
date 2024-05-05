@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import {
   Autocomplete,
   AutocompleteRenderGetTagProps,
-  Box,
   Chip,
   TextField,
   capitalize,
@@ -13,6 +12,7 @@ interface FiltersProps {
   jobs: Job[];
   selectedFilters: Partial<Record<FilterKey, (string | number)[]>>;
   updateFilter: (key: FilterKey, value: (string | number)[]) => void;
+  updateSearchTerm: (searchTerm: string) => void;
   isLoading: boolean;
 }
 
@@ -27,6 +27,7 @@ export const Filters: React.FC<FiltersProps> = ({
   jobs,
   selectedFilters,
   updateFilter,
+  updateSearchTerm,
   isLoading,
 }) => {
   // get filter options from jobs data
@@ -73,7 +74,16 @@ export const Filters: React.FC<FiltersProps> = ({
   }, [jobs]);
 
   return (
-    <Box sx={{ my: "40px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+    <>
+      <TextField
+        size="small"
+        id="company-name"
+        label="Company Name"
+        onChange={({ currentTarget }) => {
+          updateSearchTerm(currentTarget.value);
+        }}
+      />
+
       <Autocomplete
         multiple
         filterSelectedOptions
@@ -101,7 +111,7 @@ export const Filters: React.FC<FiltersProps> = ({
         loading={isLoading}
         size="small"
         id="experience"
-        sx={{ width: 200 }}
+        sx={{ width: { xs: 240, md: 200 } }}
         options={filterOptions.minExpOptions || []}
         getOptionLabel={(option) => String(option)}
         renderInput={(params) => (
@@ -165,7 +175,7 @@ export const Filters: React.FC<FiltersProps> = ({
         loading={isLoading}
         size="small"
         id="min-pay"
-        sx={{ width: 200 }}
+        sx={{ width: { xs: 240, md: 200 } }}
         options={filterOptions.minPayOptions || []}
         getOptionLabel={(option) => String(option) + "L"}
         renderInput={(params) => (
@@ -181,7 +191,7 @@ export const Filters: React.FC<FiltersProps> = ({
           updateFilter("minPay", value);
         }}
       />
-    </Box>
+    </>
   );
 };
 

@@ -12,9 +12,17 @@ export const JobList: React.FC<JobListProps> = ({ jobs = [], isLoading }) => {
   return (
     <>
       {jobs.length === 0 && !isLoading && (
-        <Typography variant="b3" sx={{ color: "text.secondary", my: "40px" }}>
-          There are no jobs matching the criteria
-        </Typography>
+        <Box sx={{ textAlign: "center", mt: "80px" }}>
+          <img
+            src="/images/no-data.png"
+            alt="no data"
+            style={{ width: "150px", height: "150px", objectFit: "cover" }}
+          />
+
+          <Typography variant="s5" sx={{ mt: "24px" }}>
+            No Jobs available for this category at the moment
+          </Typography>
+        </Box>
       )}
 
       <Box

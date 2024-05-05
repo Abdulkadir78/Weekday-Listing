@@ -7,6 +7,7 @@ import { FilterKey, Filters } from "./components/Filters";
 import { useIntersection } from "./hooks/useIntersection";
 import { Job, getJobs } from "./queries";
 import { JobList } from "./components/JobList";
+import { debounce } from "./utils";
 // import { jobs as jobsData } from "./data";
 
 const PER_PAGE = 12;
@@ -21,6 +22,8 @@ const App = () => {
   const [filters, setFilters] = useState<
     Partial<Record<FilterKey, (string | number)[]>>
   >({});
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   // using ref to store the total pages, so setting is does not trigger a re-render
   const totalPagesRef = useRef(0);
@@ -69,9 +72,13 @@ const App = () => {
     });
   };
 
+  const updateSearchTerm = debounce((searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  }, 500);
+
   // memo is used so we don't filter jobs on every render, only when jobs or filters change
   const filteredJobs = useMemo(() => {
-    return jobs.filter((job) => {
+    let filteredJobs = jobs.filter((job) => {
       return Object.entries(filters).every(([key, value]) => {
         // filter only if there filters applied, otherwise return all jobs
         if (value.length) {
@@ -108,7 +115,15 @@ const App = () => {
         return true;
       });
     });
-  }, [jobs, filters]);
+
+    if (searchTerm) {
+      filteredJobs = filteredJobs.filter((job) => {
+        return job.companyName.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
+
+    return filteredJobs;
+  }, [jobs, filters, searchTerm]);
 
   return (
     <>
@@ -117,19 +132,28 @@ const App = () => {
 
         <Box
           sx={{
-            p: "10px 40px 5px 40px",
+            p: "40px 24px 24px 24px",
             position: "sticky",
             top: 0,
             backgroundColor: "#FFFFFF",
             zIndex: 1,
           }}
         >
-          <Filters
-            jobs={jobs}
-            selectedFilters={filters}
-            updateFilter={updateFilter}
-            isLoading={isLoading}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              gap: { xs: "16px", sm: "8px" },
+              flexWrap: "wrap",
+            }}
+          >
+            <Filters
+              jobs={jobs}
+              selectedFilters={filters}
+              updateFilter={updateFilter}
+              isLoading={isLoading}
+              updateSearchTerm={updateSearchTerm}
+            />
+          </Box>
         </Box>
 
         <Container maxWidth="xl" sx={{ mt: "10px", mb: "40px" }}>

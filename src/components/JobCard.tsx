@@ -65,10 +65,12 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
             </Box>
 
             <Box>
-              <Link href={job.jdLink} underline="hover">
-                <Typography variant="b2" sx={{ color: "text.disabled" }}>
-                  {job.companyName}
-                </Typography>
+              <Link
+                href={job.jdLink}
+                underline="hover"
+                sx={{ color: "text.disabled" }}
+              >
+                <Typography variant="b2">{job.companyName}</Typography>
               </Link>
 
               <Typography variant="s6" textTransform="capitalize">
