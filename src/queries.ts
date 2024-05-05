@@ -6,9 +6,9 @@ export interface Job {
   jobRole: string;
   location: string;
   logoUrl: string;
-  maxExp: number;
+  maxExp: number | null;
   maxJdSalary: number;
-  minExp: number;
+  minExp: number | null;
   minJdSalary: number | null;
   salaryCurrencyCode: string;
 }

@@ -180,7 +180,7 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
           )} */}
 
           {job.minExp && (
-            <Box mt="12px">
+            <Box mt="32px">
               <Typography variant="b2" sx={{ color: "text.disabled" }}>
                 Minimum Experience
               </Typography>
