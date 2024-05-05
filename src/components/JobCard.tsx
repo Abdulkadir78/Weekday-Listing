@@ -8,8 +8,13 @@ import {
   Link,
   Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Job } from "../types";
+
+// to show job posted time in relative format
+dayjs.extend(relativeTime);
 
 const MAX_CHARS = 440;
 
@@ -36,7 +41,7 @@ export const JobCard: React.FC<{ job: Job }> = ({ job }) => {
           }}
         >
           <Chip
-            label={"⏳ " + job.datePosted}
+            label={"⏳ " + dayjs(job.datePosted)?.fromNow()}
             variant="outlined"
             sx={{
               height: 20,

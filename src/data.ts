@@ -3,7 +3,7 @@ import { Job } from "./types";
 export const jobs: Job[] = [
   {
     id: "1",
-    datePosted: "2021-10-01",
+    datePosted: "2024-05-01",
     company: {
       name: "Fampay",
       description:
@@ -20,7 +20,7 @@ export const jobs: Job[] = [
   },
   {
     id: "2",
-    datePosted: "2021-10-02",
+    datePosted: "2024-04-30",
     company: {
       name: "FlexWash Technologies",
       description:
