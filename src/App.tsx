@@ -136,26 +136,21 @@ const App = () => {
           sx={{
             p: "40px 24px 24px 24px",
             position: "sticky",
-            top: 0,
             backgroundColor: "#FFFFFF",
+            top: 0,
             zIndex: 1,
+            display: "flex",
+            gap: { xs: "16px", sm: "8px" },
+            flexWrap: "wrap",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              gap: { xs: "16px", sm: "8px" },
-              flexWrap: "wrap",
-            }}
-          >
-            <Filters
-              jobs={jobs}
-              selectedFilters={filters}
-              updateFilter={updateFilter}
-              isLoading={isLoading}
-              updateSearchTerm={updateSearchTerm}
-            />
-          </Box>
+          <Filters
+            jobs={jobs}
+            selectedFilters={filters}
+            updateFilter={updateFilter}
+            isLoading={isLoading}
+            updateSearchTerm={updateSearchTerm}
+          />
         </Box>
 
         <Container maxWidth="xl" sx={{ mt: "10px", mb: "40px" }}>
