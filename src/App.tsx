@@ -1,18 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import { Box, ThemeProvider, Container, CssBaseline } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Box,
+  ThemeProvider,
+  Container,
+  CssBaseline,
+  Typography,
+} from "@mui/material";
 
 import { theme } from "./theme";
 import { Loading } from "./components/Loading";
 import { JobCard } from "./components/JobCard";
+import { FilterKey, Filters } from "./components/Filters";
 import { useIntersection } from "./hooks/useIntersection";
 import { Job, getJobs } from "./queries";
+// import { jobs as jobsData } from "./data";
 
 const PER_PAGE = 12;
 
 const App = () => {
+  // const [jobs, setJobs] = useState<Job[]>(jobsData); // using static data for development
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [pageNo, setPageNo] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [filters, setFilters] = useState<
+    Partial<Record<FilterKey, (string | number)[]>>
+  >({});
 
   // using ref to store the total pages, so setting is does not trigger a re-render
   const totalPagesRef = useRef(0);
@@ -55,12 +68,74 @@ const App = () => {
     fetchJobs();
   }, [pageNo]);
 
+  const updateFilter = (key: FilterKey, value: (string | number)[]) => {
+    setFilters((prevFilters) => {
+      return { ...prevFilters, [key]: value };
+    });
+  };
+
+  // memo is used so we don't filter jobs on every render, only when jobs or filters change
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((job) => {
+      return Object.entries(filters).every(([key, value]) => {
+        // filter only if there filters applied, otherwise return all jobs
+        if (value.length) {
+          if (key === "role") {
+            return value.includes(job.jobRole);
+          }
+
+          if (key === "minExp" && job.minExp) {
+            return value.includes(job.minExp);
+          }
+
+          if (key === "remoteOnSite") {
+            // since this field in not present in the job data, we need to check manually for both values
+            if (value.includes("Remote") && value.includes("On-site")) {
+              return true;
+            }
+
+            if (value.includes("Remote")) {
+              return job.location === "remote";
+            } else {
+              return job.location !== "remote";
+            }
+          }
+
+          if (key === "location") {
+            return value.includes(job.location);
+          }
+
+          if (key === "minPay" && job.minJdSalary) {
+            return value.includes(job.minJdSalary);
+          }
+        }
+
+        return true;
+      });
+    });
+  }, [jobs, filters]);
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ my: "40px" }}>
+          <Filters
+            jobs={jobs}
+            selectedFilters={filters}
+            updateFilter={updateFilter}
+          />
+
+          {filteredJobs.length === 0 && !isLoading && (
+            <Typography
+              variant="b3"
+              sx={{ color: "text.secondary", my: "40px" }}
+            >
+              There are no jobs matching the criteria
+            </Typography>
+          )}
+
           <Box
             sx={{
               display: "grid",
@@ -72,7 +147,7 @@ const App = () => {
               gap: "32px",
             }}
           >
-            {jobs.map((job, i) => {
+            {filteredJobs.map((job, i) => {
               return <JobCard key={job.jdUid + i} job={job} />;
             })}
           </Box>
