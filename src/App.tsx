@@ -86,8 +86,9 @@ const App = () => {
             return value.includes(job.jobRole);
           }
 
-          if (key === "minExp" && job.minExp) {
-            return value.includes(job.minExp);
+          if (key === "minExp") {
+            // min exp must be less than or equal to the min exp filter (entered exp can be more than the required job exp)
+            return value.every((v) => Number(v) >= (job.minExp || 0));
           }
 
           if (key === "remoteOnSite") {
@@ -107,8 +108,9 @@ const App = () => {
             return value.includes(job.location);
           }
 
-          if (key === "minPay" && job.minJdSalary) {
-            return value.includes(job.minJdSalary);
+          if (key === "minPay") {
+            // base pay must be greater than or equal to the min pay filter
+            return value.every((v) => Number(v) <= (job.minJdSalary || 0));
           }
         }
 
